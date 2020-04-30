@@ -12,9 +12,9 @@ def fix_marks(schoolkid_name):
             mark.points = random.choice(school_grades)
             mark.save(update_fields=['points'])
     except ObjectDoesNotExist:
-        print("Can`t find this schoolboy")
+        print(f'Не смог найти школьника {schoolkid_name}')
     except MultipleObjectsReturned:
-        print("Get more than one object")
+        print('Школьник то не уникальный!')
 
 
 def remove_chastisements(schoolkid_name):
@@ -24,9 +24,9 @@ def remove_chastisements(schoolkid_name):
         for chastisement in chastisement:
             chastisement.delete()
     except ObjectDoesNotExist:
-        print("Can`t find this schoolboy")
+        print(f'Не смог найти школьника {schoolkid_name}')
     except MultipleObjectsReturned:
-        print("Get more than one object")
+        print('Школьник то не уникальный!')
 
 
 def create_commendation(subject, schoolkid_name):
@@ -41,12 +41,19 @@ def create_commendation(subject, schoolkid_name):
     ]
     try:
         child = Schoolkid.objects.get(full_name__contains=schoolkid_name)
-        lessons = Lesson.objects.filter(year_of_study=child.year_of_study, group_letter=child.group_letter,
-                                        subject__title__contains=subject).order_by('-date')
-        commendations = Commendation.objects.filter(schoolkid=child, subject__title__contains=subject)
-        commendations.create(text=random.choice(compliments), created=lessons[0].date, schoolkid=child,
-                             subject=lessons[0].subject, teacher=lessons[0].teacher)
+        lesson = Lesson.objects.filter(year_of_study=child.year_of_study, group_letter=child.group_letter,
+                                       subject__title__contains=subject).order_by('-date').first()
+        if lesson:
+            Commendation.objects.create(
+                                text=random.choice(compliments),
+                                created=lesson.date,
+                                schoolkid=child,
+                                subject=lesson.subject,
+                                teacher=lesson.teacher
+                                )
+        else:
+            print(f'Не смог найти предмет {subject}')
     except ObjectDoesNotExist:
-        print("Can`t find this schoolboy")
+        print(f'Не смог найти школьника {schoolkid_name}')
     except MultipleObjectsReturned:
-        print("Get more than one object")
+        print('Школьник то не уникальный!')
