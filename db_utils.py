@@ -1,13 +1,20 @@
+import random
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from datacenter.models import Schoolkid, Lesson, Mark, Chastisement, Commendation
+
+
 def fix_marks(schoolkid_name):
     try:
         schoolkid = Schoolkid.objects.get(full_name__contains=schoolkid_name)
         marks = Mark.objects.filter(schoolkid=schoolkid, points__lt=4)
         school_grades = [4, 5]
         for mark in marks:
-            mark.points = random.choise(school_grades)
-            mark.save(update_fields['points'])
+            mark.points = random.choice(school_grades)
+            mark.save(update_fields=['points'])
     except ObjectDoesNotExist:
         print("Can`t find this schoolboy")
+    except MultipleObjectsReturned:
+        print("Get more than one object")
 
 
 def remove_chastisements(schoolkid_name):
@@ -18,6 +25,8 @@ def remove_chastisements(schoolkid_name):
             chastisement.delete()
     except ObjectDoesNotExist:
         print("Can`t find this schoolboy")
+    except MultipleObjectsReturned:
+        print("Get more than one object")
 
 
 def create_commendation(subject, schoolkid_name):
@@ -33,9 +42,11 @@ def create_commendation(subject, schoolkid_name):
     try:
         child = Schoolkid.objects.get(full_name__contains=schoolkid_name)
         lessons = Lesson.objects.filter(year_of_study=child.year_of_study, group_letter=child.group_letter,
-                                        subject__title__contains=subject)
+                                        subject__title__contains=subject).order_by('-date')
         commendations = Commendation.objects.filter(schoolkid=child, subject__title__contains=subject)
         commendations.create(text=random.choice(compliments), created=lessons[0].date, schoolkid=child,
                              subject=lessons[0].subject, teacher=lessons[0].teacher)
     except ObjectDoesNotExist:
         print("Can`t find this schoolboy")
+    except MultipleObjectsReturned:
+        print("Get more than one object")

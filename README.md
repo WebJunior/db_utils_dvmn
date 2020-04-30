@@ -1,4 +1,4 @@
-# Databese utils
+# Database utils
 
 ## Описание проекта
 В данном проекте представлены полезные функции для изменения БД [электронного дневника](https://github.com/devmanorg/e-diary).
@@ -23,17 +23,28 @@
         * Создаёт одну похвалу от учителя.
         
 ## Требования к окружению
-Разработка велась на python [3.7.3](https://www.python.org/downloads/) + PyCharm. Также необходимо скачать себе репозиторий
+Разработка велась на python [3.7.3](https://www.python.org/downloads/) + IDE PyCharm. Также необходимо скачать себе репозиторий
 [электронного дневника](https://github.com/devmanorg/e-diary).
 
 ## Как установить
-Клонируете себе репозиторий [электронного дневника](https://github.com/devmanorg/e-diary) `git clone https://github.com/devmanorg/e-diary.git`.
+Клонируете себе репозиторий [электронного дневника](https://github.com/devmanorg/e-diary) командой:
+
+`git clone https://github.com/devmanorg/e-diary.git`
 
 ## Запуск
-Вополняете шаги из README [электронного дневника](https://github.com/devmanorg/e-diary). Запускаете сервер `python datacenter/manage.py runserver`.
-Откройте терминал, войдите в  `shell` — `python datacenter/manage.py shell`.
+Выполняете шаги из README [электронного дневника](https://github.com/devmanorg/e-diary). Сайт должен быть запущен.
+Положите `db_utils.py` рядом с `manage.py`
+Потом откройте терминал, нужно войти в `shell` командой:
 
-Когда `shell` будет запущен, первым делом надо импортировать модули, которые нужны для работы - `import random`, `from datacenter.models import *`.
+`python manage.py shell`
 
-Всё, теперь можно вставлять нужные функции в `shell` и вызывать их оттуда. Например, когда перенесете функцию
-`fix_marks` в `shell` , можно её вызвать так `fix_marks('Фролов Иван')`
+Когда `shell` будет запущен, введите импорт:
+
+`import db_utils as hack`
+
+Всё, теперь можно вызывать нужные нам функции. Например:
+
+    hack.fix_marks('Громов Зосима')
+    hack.remove_chastisements('Громов Зосима')
+    hack.create_commendation('Математика', 'Громов Зосима')
+
